@@ -2,6 +2,7 @@ package de.kai_morich.simple_bluetooth_terminal;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import java.util.Collections;
 
 public class DevicesFragment extends ListFragment {
 
+    private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter bluetoothAdapter;
     private ArrayList<BluetoothDevice> listItems = new ArrayList<>();
     private ArrayAdapter<BluetoothDevice> listAdapter;
@@ -29,8 +31,19 @@ public class DevicesFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if(getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH))
+        if(getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) {
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        }
+        if (!bluetoothAdapter.isEnabled()){
+            try {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                // @todo benutzer ja oder nein gedrueckt
+            } catch (ActivityNotFoundException ex) {
+                // @TODO Fehlermeldung
+                //Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG);
+            }
+        }
         listAdapter = new ArrayAdapter<BluetoothDevice>(getActivity(), 0, listItems) {
             @Override
             public View getView(int position, View view, ViewGroup parent) {
@@ -41,7 +54,9 @@ public class DevicesFragment extends ListFragment {
                 TextView text2 = view.findViewById(R.id.text2);
                 text1.setText(device.getName());
                 text2.setText(device.getAddress());
+
                 return view;
+
             }
         };
     }
@@ -94,7 +109,9 @@ public class DevicesFragment extends ListFragment {
         if(bluetoothAdapter != null) {
             for (BluetoothDevice device : bluetoothAdapter.getBondedDevices())
                 if (device.getType() != BluetoothDevice.DEVICE_TYPE_LE)
-                    listItems.add(device);
+                    if (device.getName().startsWith(getString(R.string.BLUETOOTH_NAME))) {
+                        listItems.add(device);
+                    }
         }
         Collections.sort(listItems, DevicesFragment::compareTo);
         listAdapter.notifyDataSetChanged();
