@@ -2,4 +2,24 @@
     <string name="app_name">Simple Bluetooth Terminal</string>
     <string name="devices">Bluetooth Devices</string>
     <string name="BLUETOOTH_NAME">RNBT</string>
+
+    <string name="text_color">ct</string>
+
+    <string name="White">wh</string>
+    <string name="Red">rd</string>
+    <string name="Lime">lm</string>
+    <string name="Blue">bl</string>
+    <string name="Yellow">yl</string>
+    <string name="Aqua">aq</string>
+    <string name="Fuchsia">fu</string>
+
+    <string-array name="colors">
+        <item>White</item>
+        <item>Red</item>
+        <item>Lime</item>
+        <item>Blue</item>
+        <item>Yellow</item>
+        <item>Aqua</item>
+        <item>Fuchsia</item>
+    </string-array>
 </resources>

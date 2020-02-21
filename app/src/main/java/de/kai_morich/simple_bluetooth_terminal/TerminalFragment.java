@@ -8,6 +8,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import androidx.annotation.NonNull;
@@ -23,6 +26,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +37,10 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private enum Connected { False, Pending, True }
 
     private String deviceAddress;
-    private String newline = "\r\n";
+    private String newline = "\n";
 
     private TextView receiveText;
+    private TextClock textClock;
 
     private SerialSocket socket;
     private SerialService service;
@@ -123,6 +130,55 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         TextView sendText = view.findViewById(R.id.send_text);
         View sendBtn = view.findViewById(R.id.send_btn);
         sendBtn.setOnClickListener(v -> send(sendText.getText().toString()));
+        View helpbtn = view.findViewById(R.id.button_help);
+        helpbtn.setOnClickListener(view1 -> send("h"));
+        textClock = view.findViewById(R.id.textClock);
+        Spinner text_spinner = view.findViewById(R.id.spinner_Text);
+        text_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            // TODO erstmaliges senden verhindern, button save, status(farbe) zu beginn auslesen
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                int col = Color.WHITE;
+                switch (pos){
+                    case 0:
+                        col = Color.WHITE;
+                        send(getString(R.string.text_color) + " " + getString(R.string.White));
+                        break;
+                    case 1:
+                        col = Color.RED;
+                        send(getString(R.string.text_color) + " " + getString(R.string.Red));
+                        break;
+                    case 2:
+                        col = Color.parseColor("#00FF00");
+                        send(getString(R.string.text_color) + " " + getString(R.string.Lime));
+                        break;
+                    case 3:
+                        col = Color.BLUE;
+                        send(getString(R.string.text_color) + " " + getString(R.string.Blue));
+                        break;
+                    case 4:
+                        col = Color.YELLOW;
+                        send(getString(R.string.text_color) + " " + getString(R.string.Yellow));
+                        break;
+                    case 5:
+                        col = Color.parseColor("#00FFFF");
+                        send(getString(R.string.text_color) + " " + getString(R.string.Aqua));
+                        break;
+                    case 6:
+                        col = Color.parseColor("#FF00FF");
+                        send(getString(R.string.text_color) + " " + getString(R.string.Fuchsia));
+                        break;
+                }
+                textClock.setTextColor(col);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
+            }});
+
         return view;
     }
 
