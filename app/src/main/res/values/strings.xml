@@ -4,6 +4,8 @@
     <string name="BLUETOOTH_NAME">RNBT</string>
 
     <string name="text_color">ct</string>
+    <string name="colon_color">cc</string>
+    <string name="save">save</string>
 
     <string name="White">wh</string>
     <string name="Red">rd</string>

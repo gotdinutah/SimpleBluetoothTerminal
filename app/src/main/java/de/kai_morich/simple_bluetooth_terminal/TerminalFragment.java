@@ -130,6 +130,8 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         TextView sendText = view.findViewById(R.id.send_text);
         View sendBtn = view.findViewById(R.id.send_btn);
         sendBtn.setOnClickListener(v -> send(sendText.getText().toString()));
+        View saveTextColorButton = view.findViewById(R.id.buttonSaveTextColor);
+        saveTextColorButton.setOnClickListener(v -> send(getString(R.string.save)));
         View helpbtn = view.findViewById(R.id.button_help);
         helpbtn.setOnClickListener(view1 -> send("h"));
         textClock = view.findViewById(R.id.textClock);
